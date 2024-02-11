@@ -1,0 +1,50 @@
+version: 3
+
+tasks:
+  predev:
+    desc: Setting up development environment
+    cmds:
+      - task: predev-backend
+      - task: predev-frontend
+    
+  predev-backend:
+    desc: Setting up backend development environment
+    dir: backend
+    cmds:
+      - py -m venv venv
+      - pip install -r requirements.txt
+
+  predev-frontend:
+    desc: Setting up frontend development environment
+    dir: frontend
+    cmds:
+      - yarn install
+  
+  start:
+    desc: Start docker compose
+    cmds:
+      - task: build
+      - docker-compose up
+  
+  build:
+    desc: Build docker compose
+    cmds:
+      - docker-compose build
+
+  start-local:
+    desc: Start server
+    deps: 
+      - start-backend
+      - start-frontend
+  
+  start-backend:
+    desc: Start backend
+    dir: backend
+    cmds:
+      - py manage.py runserver
+
+  start-frontend:
+    desc: Start frontend
+    dir: frontend
+    cmds:
+      - yarn vite
